@@ -19,6 +19,7 @@ export class RefundListComponent implements OnInit {
 
   loadRefunds() {
     this.refundService.getRefunds().subscribe(data => this.refunds = data);
+    console.log('Refunds loaded:', this.refunds);
   }
 
   openAddModal() {
@@ -52,4 +53,41 @@ export class RefundListComponent implements OnInit {
       this.loadRefunds();
     });
   }
+
+
+  downloadPdf() {
+    this.refundService.downloadRefundPdf().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'refunds.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+  selectedStatus: string = '';
+
+downloadPdf1() {
+  this.refundService.downloadRefundPdfFiltered(this.selectedStatus).subscribe(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'refunds.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
+}
+
+
+searchText: string = '';
+get filteredRefunds() {
+  if (!this.searchText) return this.refunds;
+  const lower = this.searchText.toLowerCase();
+  return this.refunds.filter(r =>
+    r.status.toLowerCase().includes(lower) ||
+    r.amount.toString().includes(lower) ||
+    r.requestDate?.toString().includes(lower)
+  );
+}
+
 }
