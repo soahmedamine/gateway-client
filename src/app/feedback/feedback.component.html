@@ -1,0 +1,69 @@
+<p>feedback works!</p>
+<div class="container mt-4">
+    <h2>Gestion des Feedbacks</h2>
+    <button class="btn btn-primary mb-3" (click)="openAddModal()">Ajouter</button>
+    <div class="mb-3">
+        <button class="btn btn-outline-danger" (click)="downloadPdfFile()">
+          📄 Exporter en PDF
+        </button>
+      </div>
+      
+  
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+              <th (click)="sortBy('feedbackId')" style="cursor: pointer;">
+                ID
+                <span *ngIf="sortField === 'feedbackId'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th>Description</th>
+              <th (click)="sortBy('submissionDate')" style="cursor: pointer;">
+                Date de soumission
+                <span *ngIf="sortField === 'submissionDate'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          
+      <tbody>
+        <tr *ngFor="let fb of feedbacks">
+          <td>{{ fb.feedbackId }}</td>
+          <td>{{ fb.description }}</td>
+          <td>{{ fb.submissionDate | date: 'short' }}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(fb)">Modifier</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteFeedback(fb.feedbackId)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal" id="feedbackModal" style="display: none;" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="saveFeedback()">
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" [(ngModel)]="currentFeedback.description" name="description" required></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+              <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,78 @@
+<!-- src/app/contrat/contract.component.html -->
+<div class="container mt-4">
+  <h2>Liste des Contrats</h2>
+  <button class="btn btn-primary mb-3" (click)="openAddModal()">Ajouter un contrat</button>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Numéro</th>
+        <th>Date début</th>
+        <th>Date fin</th>
+        <th>Statut</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of contracts">
+        <td>{{ c.idContrat }}</td>
+        <td>{{ c.number }}</td>
+        <td>{{ c.startDate | date: 'shortDate' }}</td>
+        <td>{{ c.endDate | date: 'shortDate' }}</td>
+        <td>{{ c.status }}</td>
+        <td>{{ c.clientEmail }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" (click)="openEditModal(c)">Modifier</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(c.idContrat!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="contractModal" style="display: none;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="save()">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button type="button" class="btn-close" (click)="hideModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>Numéro</label>
+            <input class="form-control" [(ngModel)]="currentContract.number" name="number" required>
+          </div>
+          <div class="mb-3">
+            <label>Date début</label>
+            <input type="date" class="form-control" [(ngModel)]="currentContract.startDate" name="startDate" required>
+          </div>
+          <div class="mb-3">
+            <label>Date fin</label>
+            <input type="date" class="form-control" [(ngModel)]="currentContract.endDate" name="endDate" required>
+          </div>
+          <div class="mb-3">
+            <label>Statut</label>
+            <select class="form-select" [(ngModel)]="currentContract.status" name="status">
+              <option value="ONGOING">En cours</option>
+              <option value="COMPLETED">Terminé</option>
+              <option value="EXPIRED">Expiré</option>
+              <option value="CANCELLED">Annulé</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Email client</label>
+            <input type="email" class="form-control" [(ngModel)]="currentContract.clientEmail" name="clientEmail">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" (click)="hideModal()">Annuler</button>
+          <button class="btn btn-primary" type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
